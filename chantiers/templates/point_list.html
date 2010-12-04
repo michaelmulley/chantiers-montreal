@@ -1,0 +1,7 @@
+Results: {{ chantiers|length }}
+{% for chantier in chantiers %}
+<div class="chantier">
+    <h3>{{ chantier.name }}</h3>
+    <ul>{% for where in chantier.where_list %}<li>{{ where }}<li>{% endfor %}</ul>
+</div>
+{% endfor %}

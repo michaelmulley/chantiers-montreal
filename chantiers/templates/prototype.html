@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+<style type="text/css">
+input {
+    font-size: 16px;
+}
+input[type=text] {
+    width: 400px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<p>From: <input type="text" id="dir_from"></p>
+<p>To: <input type="text" id="dir_to"></p>
+<input type="button" value="Go" id="dir_go">
+
+<div id="results">
+</div>
+<script type="text/javascript">
+$(function() {
+    
+    $('#dir_go').click(function() {
+        directionsService = new google.maps.DirectionsService();
+        
+        var request = {
+              origin: $('#dir_from').val(),
+              destination: $('#dir_to').val(),
+              travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+        
+        directionsService.route(request, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+                var route = response.routes[0];
+                var line_for_request = JSON.stringify($.map(route.overview_path, function(elem) {
+                    return [[elem.lng(), elem.lat()]];
+                }))
+                console.log(line_for_request);
+                $('#results').load('/from_line/', {'line': line_for_request})
+            } else {
+                alert('status is NOT OKAY');
+            }
+        });
+    });
+})
+</script>
+{% endblock %}
+
